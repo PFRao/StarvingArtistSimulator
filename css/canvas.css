@@ -1,10 +1,14 @@
 /*Game Area*/
 
+body {
+  background: #f5deb3;
+  font-family: 'Poiret One', cursive;
+}
+
 .gameArea {
   display: inline-flex;
   position: relative;
-  background: #545050;
-  margin: auto;
+  background: #f5deb3;
   height: 750px;
   width: 1200px;
 }
@@ -28,6 +32,12 @@
   border: 10px solid black;
   height: 500px;
   width: 500px;
+  background: white;
+}
+
+#pictureDiv:hover {
+  cursor: url('data:image/x-icon;base64,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/4f/////rJ/l/87G8P+/v/+/h4f/hwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADX1//XAAD//wAA//8AAP//5+f/5wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN/f/98AAP//39//3wAA///f3//fAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAN/f/98AAAAA39//3wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//////gB///gAD//gAAP/4AAA/+AAAH/gAAA/4AAAP+AAAB/gAAAP4AAAB+AAAAfgAAAHwAAAAMAAAABAAAAAQAAAAAAAAAAAAAAAIAAAACAAAAAwAAAAcAAAAHwAAAD/AAAB/+AAB/v8AA/x/gAP4P///+D////1/////////8='), auto;
+  /*cursor: url('../assets/pointer.jpg'), auto;*/
 }
 
 #pictureDiv > img {
@@ -43,7 +53,6 @@
   width: 100px;
   background: #f5deb3;
   text-align: center;
-  font-family: sans-serif;
   font-size: 24px;
   top: 550px;
   right: 550px;
@@ -61,7 +70,6 @@
   top: 550px;
   right: 20px;
   text-align: center;
-  font-family: sans-serif;
   font-size: 24px;
 }
 
@@ -77,6 +85,7 @@
 
 #brushDiv {
   position: absolute;
+  display: inline-flex;
   margin: auto;
   height: 100px;
   width: 500px;
@@ -89,12 +98,12 @@
 /*Brushes*/
 
 .brushButton {
+  position: relative;
   margin: auto;
-  border: 1px solid black;
-  height: 30px;
-  width: 30px;
+  height:50px;
+  width: 50px;
   margin: 10px;
-  border-radius: 15px;
+  border-radius: 25px;
 }
 
 .brushButton:hover {
@@ -105,20 +114,54 @@
   border: 2px solid white;
 }
 
-#smallBrush {
-
+#smallBrush > div {
+  /*position: absolute;*/
+  background: black;
+  height: 5px;
+  width: 5px;
+  border-radius: 3px;
+  z-index: 1;
+  margin: 0 auto;
 }
 
-#normalBrush {
-
+#normalBrush > div {
+  /*position: absolute;*/
+  background: black;
+  height: 10px;
+  width: 10px;
+  border-radius: 5px;
+  z-index: 1;
+  margin: 0 auto;
 }
 
-#largeBrush {
-
+#largeBrush > div {
+  /*position: absolute;*/
+  background: black;
+  height: 20px;
+  width: 20px;
+  border-radius: 10px;
+  z-index: 1;
+  margin: 0 auto;
 }
 
-#hugeBrush {
+#hugeBrush > div {
+  /*position: absolute;*/
+  background: black;
+  height: 30px;
+  width: 30px;
+  border-radius: 15px;
+  z-index: 1;
+  margin: 0 auto;
+}
 
+#ginormousBrush > div {
+  /*position: absolute;*/
+  background: black;
+  height:40px;
+  width: 40px;
+  border-radius: 20px;
+  z-index: 1;
+  margin: 0 auto;
 }
 
 /*Colors*/
@@ -138,6 +181,25 @@
 
 .paletteButton:focus {
   border: 2px solid white;
+}
+
+#currentColorLabel {
+  height: 30px;
+  width: 30px;
+  margin-top: 50px;
+  border-radius: 15px;
+  text-align: center;
+}
+
+#currentColor {
+  position:relative;
+  margin-top: 10px;
+  margin-left: 20px;
+  border: 1px solid black;
+  border-radius: 10px;
+  background:#000000;
+  height:20px;
+  width:20px;
 }
 
 #purplePaint {
@@ -162,4 +224,14 @@
 
 #blackPaint {
   background: #000000;
+}
+
+/*Modal*/
+
+.modal-background {
+
+}
+
+.modal-window {
+
 }

@@ -13,12 +13,16 @@ var colorBrown = "#986928";
 var colorCyan = "#5cd5d1";
 var colorBlack = "#000000";
 
-var curColor = colorPurple;
+var curColor = colorBlack;
 var clickColor = [];
 
 var timer = new Clock();
 
-var curSize = "normal";
+var curSize = "large";
+
+// var gameMode = "assets";
+// var gameExtension = "jpg";
+// var gameTime = 90;
 
 function addClick(x, y, dragging)
 {
@@ -37,13 +41,15 @@ function redraw(){
   for(var i = 0; i < clickX.length; i++)
   {
     if(clickSize[i] == "small"){
-      radius = 2;
-    }else if(clickSize[i] == "normal"){
       radius = 5;
-    }else if(clickSize[i] == "large"){
+    }else if(clickSize[i] == "normal"){
       radius = 10;
-    }else if(clickSize[i] == "huge"){
+    }else if(clickSize[i] == "large"){
       radius = 20;
+    }else if(clickSize[i] == "huge"){
+      radius = 30;
+    }else if(clickSize[i] == "ginormous"){
+      redius = 40;
     }else{
       alert("Error: Radius is zero for click " + i);
       radius = 5;
@@ -74,7 +80,7 @@ function redraw(){
 }
 
 var canvasDiv = document.getElementById('canvasDiv');
-canvas = document.createElement('canvas');
+var canvas = document.createElement('canvas');
 canvas.setAttribute('width', 500);
 canvas.setAttribute('height', 500);
 canvas.setAttribute('id', 'theCanvas');
@@ -84,19 +90,46 @@ if(typeof G_vmlCanvasManager != 'undefined') {
 }
 context = canvas.getContext("2d");
 
-var paletteDiv = document.getElementById('pictureDiv');
+var paletteDiv = document.getElementById('paletteDiv');
 
 var pictureDiv = document.getElementById('pictureDiv');
-picture = document.createElement('img');
 
-whichPic = Math.floor(Math.random() * (10 - 1 + 1)) + 1;
+whichPic = Math.floor(Math.random() * (20 - 1 + 1)) + 1;
 console.log("Selecting picture #", whichPic);
-var picString = 'assets/' + whichPic + '.jpg';
+var picString = 'assets2/' + whichPic + '.png';
 
+var image = new Image();
+image.height = 500;
+image.width = 500;
+image.src = picString;
+
+var picture = document.createElement('canvas');
 picture.setAttribute('width', 500);
 picture.setAttribute('height', 500);
-picture.setAttribute('src', picString);
+picture.setAttribute('id', 'thePicture');
 pictureDiv.appendChild(picture);
+
+image.onload = function () {
+
+  if(typeof G_vmlCanvasManager != 'undefined') {
+    picture = G_vmlCanvasManager.initElement(picture);
+  }
+  pictureContext = picture.getContext("2d");
+  pictureContext.drawImage(image, 0, 0, 500, 500);
+
+};
+
+// var pictureDiv = document.getElementById('pictureDiv');
+// picture = document.createElement('img');
+//
+// whichPic = Math.floor(Math.random() * (10 - 1 + 1)) + 1;
+// console.log("Selecting picture #", whichPic);
+// var picString = 'assets/' + whichPic + '.jpg';
+//
+// picture.setAttribute('width', 500);
+// picture.setAttribute('height', 500);
+// picture.setAttribute('src', picString);
+// pictureDiv.appendChild(picture);
 
 var timerDiv = document.getElementById('timerDiv');
 
@@ -107,44 +140,59 @@ $('#scoreDiv').html("Score: 0");
 
 $('#smallBrush').click(function (e) {
   curSize = "small";
+  updateBrush();
 });
 
 $('#normalBrush').click(function (e) {
   curSize = "normal";
+  updateBrush();
 });
 
 $('#largeBrush').click(function (e) {
   curSize = "large";
+  updateBrush();
 });
 
 $('#hugeBrush').click(function (e) {
   curSize = "huge";
+  updateBrush();
+});
+
+$('#ginormousBrush').click(function (e) {
+  curSize = "ginormous";
+  updateBrush();
 });
 
 // COLOR CONTROLS
 
 $('#purplePaint').click(function (e) {
   curColor = colorPurple;
+  updateBrush();
 });
 
 $('#greenPaint').click(function (e) {
   curColor = colorGreen;
+  updateBrush();
 });
 
 $('#yellowPaint').click(function (e) {
   curColor = colorYellow;
+  updateBrush();
 });
 
 $('#brownPaint').click(function (e) {
   curColor = colorBrown;
+  updateBrush();
 });
 
 $('#cyanPaint').click(function (e) {
   curColor = colorCyan;
+  updateBrush();
 });
 
 $('#blackPaint').click(function (e) {
   curColor = colorBlack;
+  updateBrush();
 });
 
 // PAINTING
@@ -173,11 +221,40 @@ $('#theCanvas').mouseleave(function(e){
   paint = false;
 });
 
+// COLOR PICKING
+
+$('#thePicture').click(function (event) {
+  // var colorPicker = document.getElementById('thePicture');
+
+  var x = event.pageX - this.offsetLeft;
+  var y = event.pageY - this.offsetTop;
+
+  var imgData = pictureContext.getImageData(x, y, 1, 1);
+  var r = imgData.data[0];
+  var g = imgData.data[1];
+  var b = imgData.data[2];
+
+  var newHex = rgbToHex(r, g, b);
+  curColor = "#" + newHex;
+  updateBrush();
+});
+
+function rgbToHex(r,g,b) {
+  return toHex(r)+toHex(g)+toHex(b);
+}
+
+function toHex(n) {
+  n = parseInt(n,10);
+  if (isNaN(n)) return "00";
+  n = Math.max(0,Math.min(n,255));return "0123456789ABCDEF".charAt((n-n%16)/16) + "0123456789ABCDEF".charAt(n%16);
+}
+
+
 // TIMER
 
 function Clock () {
   // 1. Create a bunch of things.
-  this.currentTime = 5;
+  this.currentTime = 3;
 
   this.printTime = function () {
     $('#timerDiv').html(this.currentTime.toString());
@@ -188,7 +265,7 @@ function Clock () {
       this._incrementSeconds();
       this.printTime();
     } else {
-      $('#timerDiv').html("Time!");
+      $('#timerDiv').html("<button onclick='reload_js()'>Click here to play again!</a>");
       window.clearInterval(this.interval);
       compare();
     }
@@ -207,20 +284,92 @@ function Clock () {
 
 // COMPARISON
 
+// var compare = function () {
+//
+//   var finished = document.getElementById("theCanvas");
+//
+//   finished.toBlob(function(blob) {
+//     var newImg = document.createElement("img"),
+//     url = URL.createObjectURL(blob);
+//     console.log(url);
+//     var diff = resemble(url).compareTo(picString).onComplete(function(data){
+//       var theScore = (100 - data.rawMisMatchPercentage);
+//       countUp(theScore);
+//     });
+//
+//     newImg.onload = function() {
+//       URL.revokeObjectURL(url);
+//     };
+//
+//     $('#canvasDiv').html("<img src='" + url + "' />");
+//
+//   });
+// };
+
+var returnUrl = function (url) {
+
+};
+
 var compare = function () {
 
   var finished = document.getElementById("theCanvas");
+  var goalPic = document.getElementById("thePicture");
 
   finished.toBlob(function(blob) {
-    var newImg = document.createElement("img"),
+    var url, url2;
+    var newImg = document.createElement("img");
     url = URL.createObjectURL(blob);
+    // console.log(Url.createObjectURL(blob));
+    // console.log(blob);
+    newImg.onload = function() {
+      URL.revokeObjectURL(url);
+    };
+    goalPic.toBlob(function(blob) {
+      var newImg = document.createElement("img");
+      url2 = URL.createObjectURL(blob);
 
-    var diff = resemble(url).compareTo(picString).ignoreColors().onComplete(function(data){
-      var theScore = (100 - data.rawMisMatchPercentage);
-      countUp(theScore * 10000);
+      newImg.onload = function() {
+        URL.revokeObjectURL(url2);
+      };
+      $('#canvasDiv').html("<img src='" + url + "' />");
+
+      var diff = resemble(url).compareTo(url2).onComplete(function(data){
+        var theScore = (100 - data.rawMisMatchPercentage);
+        countUp(theScore * 10);
+      });
     });
 
+
   });
+
+
+};
+
+// MODAL
+
+
+
+// UTILITY STUFF
+
+var updateBrush = function () {
+  var newSize;
+
+  if (curSize === "small") {
+    newSize = 5;
+  } else if (curSize === "normal") {
+    newSize = 10;
+  } else if (curSize === "large") {
+    newSize = 20;
+  } else if (curSize === "huge") {
+    newSize = 30;
+  } else {
+    newSize = 40;
+  }
+
+  $('#currentColor').css('background', curColor);
+  $('#currentColor').css('height', newSize);
+  $('#currentColor').css('width', newSize);
+  $('#currentColor').css('border-radius', newSize/2);
 };
 
 var countUp = function (target) {
