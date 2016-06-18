@@ -25,17 +25,18 @@
       </div>
     </div>
 
-    <div class='gameArea'>
+    <div class='gameArea' id="everything">
 
       <div id="canvasDiv"></div>
       <div id="paletteDiv">
-        <button class='paletteButton' id='purplePaint' />
+        <!-- <button class='paletteButton' id='purplePaint' />
         <button class='paletteButton' id='greenPaint' />
         <button class='paletteButton' id='yellowPaint' />
         <button class='paletteButton' id='brownPaint' />
         <button class='paletteButton' id='cyanPaint' />
-        <button class='paletteButton' id='blackPaint' />
+        <button class='paletteButton' id='blackPaint' /> -->
 
+        <button id="reset" onclick='reload_js()'>Click here to start over!</button>
         <div id="currentColorLabel">CURRENT BRUSH:</div>
         <div id="currentColor"></div>
       </div>
@@ -48,7 +49,10 @@
         <button class='brushButton' id='ginormousBrush'><div /></button>
       </div>
       <div id="timerDiv"></div>
-      <div id="scoreDiv"></div>
+      <div id="scoreDiv">
+        <p id="scoreDisplay"></p>
+        <input type="text" placeholder="Type your name here" id="playerName" />
+      </div>
 
     </div>
 
@@ -60,11 +64,23 @@
 
     <script src="./js/canvas-to-blob.min.js" type="text/javascript"></script>
     <script src="http://huddle.github.io/Resemble.js/resemble.js"></script>
+    <script type="text/javascript">
+      var leaderboard = [];
+    </script>
     <script src="./js/paint.js" type="text/javascript"></script>
     <script>
       function reload_js() {
         $('#theCanvas').remove();
         $('#thePicture').remove();
+        $('#theResult').remove();
+        $('#leaderboard').remove();
+
+        var el = document.getElementById('everything'),
+        elClone = el.cloneNode(true);
+        el.parentNode.replaceChild(elClone, el);
+
+        started = false;
+        paint = false;
 
         $('script[src="./js/paint.js"]').remove();
         $('<script>').attr('src', "./js/paint.js").appendTo('head');

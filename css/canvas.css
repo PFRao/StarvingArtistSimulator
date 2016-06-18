@@ -5,6 +5,15 @@ body {
   font-family: 'Poiret One', cursive;
 }
 
+input {
+  color: #158c21;
+  width: 400px;
+}
+
+ul {
+  max-width: 200px;
+}
+
 .gameArea {
   display: inline-flex;
   position: relative;
@@ -56,7 +65,6 @@ body {
   font-size: 24px;
   top: 550px;
   right: 550px;
-  padding-top: 38px;
 }
 
 /*Score*/
@@ -202,7 +210,14 @@ body {
   width:20px;
 }
 
-#purplePaint {
+#reset {
+  border: 2px dotted black;
+  padding: 10px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+/*#purplePaint {
   background: #cb3594;
 }
 
@@ -224,7 +239,7 @@ body {
 
 #blackPaint {
   background: #000000;
-}
+}*/
 
 /*Modal*/
 

@@ -5,15 +5,16 @@ var clickSize = [];
 var clickTool = [];
 
 var paint;
+var started;
 
-var colorPurple = "#cb3594";
-var colorGreen = "#659b41";
-var colorYellow = "#ffcf33";
-var colorBrown = "#986928";
-var colorCyan = "#5cd5d1";
-var colorBlack = "#000000";
+// var colorPurple = "#cb3594";
+// var colorGreen = "#659b41";
+// var colorYellow = "#ffcf33";
+// var colorBrown = "#986928";
+// var colorCyan = "#5cd5d1";
+// var colorBlack = "#000000";
 
-var curColor = colorBlack;
+var curColor = "#000000";
 var clickColor = [];
 
 var timer = new Clock();
@@ -42,15 +43,15 @@ function redraw(){
   {
     if(clickSize[i] == "small"){
       radius = 5;
-    }else if(clickSize[i] == "normal"){
+    } else if(clickSize[i] == "normal") {
       radius = 10;
-    }else if(clickSize[i] == "large"){
+    } else if(clickSize[i] == "large") {
       radius = 20;
-    }else if(clickSize[i] == "huge"){
+    } else if(clickSize[i] == "huge") {
       radius = 30;
-    }else if(clickSize[i] == "ginormous"){
-      redius = 40;
-    }else{
+    } else if(clickSize[i] == "ginormous") {
+      radius = 40;
+    } else {
       alert("Error: Radius is zero for click " + i);
       radius = 5;
     }
@@ -64,14 +65,14 @@ function redraw(){
     context.lineTo(clickX[i], clickY[i]);
     context.closePath();
 
-    if(clickTool[i] == "eraser"){
-      //context.globalCompositeOperation = "destination-out"; // To erase instead of draw over with white
-      context.strokeStyle = 'white';
-    }else{
-      //context.globalCompositeOperation = "source-over";	// To erase instead of draw over with white
-      context.strokeStyle = clickColor[i];
-    }
-    // context.strokeStyle = curColor;
+    // if(clickTool[i] == "eraser"){
+    //   //context.globalCompositeOperation = "destination-out"; // To erase instead of draw over with white
+    //   context.strokeStyle = 'white';
+    // }else{
+    //   //context.globalCompositeOperation = "source-over";	// To erase instead of draw over with white
+    // }
+
+    context.strokeStyle = clickColor[i];
     context.lineJoin = "round";
     context.lineWidth = radius;
     context.stroke();
@@ -116,6 +117,8 @@ image.onload = function () {
   }
   pictureContext = picture.getContext("2d");
   pictureContext.drawImage(image, 0, 0, 500, 500);
+  $('body').append("<ul id='leaderboard'>Past Pictures:</ul>");
+  renderLeaderboard();
 
 };
 
@@ -131,10 +134,10 @@ image.onload = function () {
 // picture.setAttribute('src', picString);
 // pictureDiv.appendChild(picture);
 
-var timerDiv = document.getElementById('timerDiv');
-
-var scoreDiv = document.getElementById('scoreDiv');
-$('#scoreDiv').html("Score: 0");
+// var timerDiv = document.getElementById('timerDiv');
+//
+// var scoreDiv = document.getElementById('scoreDiv');
+$('#scoreDisplay').html("Score: 0");
 
 // BRUSH CONTROLS
 
@@ -165,34 +168,39 @@ $('#ginormousBrush').click(function (e) {
 
 // COLOR CONTROLS
 
-$('#purplePaint').click(function (e) {
-  curColor = colorPurple;
-  updateBrush();
-});
+// $('#purplePaint').click(function (e) {
+//   curColor = colorPurple;
+//   updateBrush();
+// });
+//
+// $('#greenPaint').click(function (e) {
+//   curColor = colorGreen;
+//   updateBrush();
+// });
+//
+// $('#yellowPaint').click(function (e) {
+//   curColor = colorYellow;
+//   updateBrush();
+// });
+//
+// $('#brownPaint').click(function (e) {
+//   curColor = colorBrown;
+//   updateBrush();
+// });
+//
+// $('#cyanPaint').click(function (e) {
+//   curColor = colorCyan;
+//   updateBrush();
+// });
+//
+// $('#blackPaint').click(function (e) {
+//   curColor = colorBlack;
+//   updateBrush();
+// });
 
-$('#greenPaint').click(function (e) {
-  curColor = colorGreen;
-  updateBrush();
-});
-
-$('#yellowPaint').click(function (e) {
-  curColor = colorYellow;
-  updateBrush();
-});
-
-$('#brownPaint').click(function (e) {
-  curColor = colorBrown;
-  updateBrush();
-});
-
-$('#cyanPaint').click(function (e) {
-  curColor = colorCyan;
-  updateBrush();
-});
-
-$('#blackPaint').click(function (e) {
-  curColor = colorBlack;
-  updateBrush();
+$('#eraser').click(function (e) {
+  curColor = "#FFFFFF";
+  updateBrush(true);
 });
 
 // PAINTING
@@ -200,6 +208,11 @@ $('#blackPaint').click(function (e) {
 $('#theCanvas').mousedown(function(e){
   var mouseX = e.pageX - this.offsetLeft;
   var mouseY = e.pageY - this.offsetTop;
+
+  if (!started) {
+    started = true;
+    timer.startGame();
+  }
 
   paint = true;
   addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop);
@@ -254,7 +267,7 @@ function toHex(n) {
 
 function Clock () {
   // 1. Create a bunch of things.
-  this.currentTime = 3;
+  this.currentTime = 10;
 
   this.printTime = function () {
     $('#timerDiv').html(this.currentTime.toString());
@@ -265,7 +278,7 @@ function Clock () {
       this._incrementSeconds();
       this.printTime();
     } else {
-      $('#timerDiv').html("<button onclick='reload_js()'>Click here to play again!</a>");
+      $('#timerDiv').html("Time's up!");
       window.clearInterval(this.interval);
       compare();
     }
@@ -275,11 +288,14 @@ function Clock () {
     this.currentTime -= 1;
   };
   // 3. Call printTime.
-  this.printTime();
+  $('#timerDiv').html("Start drawing to begin the game!");
 
   // 4. Schedule the tick at 1 second intervals.
   // this.interval = window.
-  this.interval = window.setInterval(this._tick.bind(this), 1000);
+  this.startGame = function () {
+    this.printTime();
+    this.interval = window.setInterval(this._tick.bind(this), 1000);
+  };
 }
 
 // COMPARISON
@@ -306,10 +322,6 @@ function Clock () {
 //   });
 // };
 
-var returnUrl = function (url) {
-
-};
-
 var compare = function () {
 
   var finished = document.getElementById("theCanvas");
@@ -331,7 +343,7 @@ var compare = function () {
       newImg.onload = function() {
         URL.revokeObjectURL(url2);
       };
-      $('#canvasDiv').html("<img src='" + url + "' />");
+      $('#canvasDiv').html("<img id='theResult' src='" + url + "' />");
 
       var diff = resemble(url).compareTo(url2).onComplete(function(data){
         var theScore = (100 - data.rawMisMatchPercentage);
@@ -345,9 +357,22 @@ var compare = function () {
 
 };
 
-// MODAL
+// LEADERBOARD
 
+var renderLeaderboard = function () {
+  leaderboard.forEach(function (element, index) {
+    console.log(element);
+    $('#leaderboard').append(
+      "<li>" + element[0] + "<br />" + element[1] + "<br />",
+      element[2],
+      "</li>"
+    );
+  });
+};
 
+var updateLeaderboard = function (name, score, picture) {
+  leaderboard.push([name, score, picture]);
+};
 
 // UTILITY STUFF
 
@@ -375,14 +400,18 @@ var updateBrush = function () {
 var countUp = function (target) {
 
   var count = 0;
+  var playerName = $('#playerName').val();
+  var theResult = $('#theResult');
   console.log("Your score is:", target);
   var theInterval = window.setInterval(function () {
-    $('#scoreDiv').html("Score: " + count);
+    $('#scoreDisplay').html("Score: " + count);
     if (count < target) {
       count += 1;
     } else {
       window.clearInterval(theInterval);
+      updateLeaderboard(playerName, count, theResult);
     }
   }, 1);
+
 
 };
