@@ -360,6 +360,9 @@ var compare = function () {
 // LEADERBOARD
 
 var renderLeaderboard = function () {
+  leaderboard = leaderboard.sort(function (a, b) {
+    return b[1] - a[1];
+  });
   leaderboard.forEach(function (element, index) {
     $('#leaderboard').append(
       "<li>" + element[0] + "<br />" + element[1] + "<br />",
