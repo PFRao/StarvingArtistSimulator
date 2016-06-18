@@ -117,7 +117,7 @@ image.onload = function () {
   }
   pictureContext = picture.getContext("2d");
   pictureContext.drawImage(image, 0, 0, 500, 500);
-  $('body').append("<ul id='leaderboard'>Past Pictures:</ul>");
+  $('body').append("<ul id='leaderboard'>Previous Pictures:</ul>");
   renderLeaderboard();
 
 };
@@ -361,7 +361,6 @@ var compare = function () {
 
 var renderLeaderboard = function () {
   leaderboard.forEach(function (element, index) {
-    console.log(element);
     $('#leaderboard').append(
       "<li>" + element[0] + "<br />" + element[1] + "<br />",
       element[2],
