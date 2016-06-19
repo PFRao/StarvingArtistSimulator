@@ -27,7 +27,7 @@
 
     <div class='gameArea' id="everything">
 
-      <div id="canvasDiv"></div>
+      <div id="pictureDiv"></div>
       <div id="paletteDiv">
         <!-- <button class='paletteButton' id='purplePaint' />
         <button class='paletteButton' id='greenPaint' />
@@ -37,10 +37,10 @@
         <button class='paletteButton' id='blackPaint' /> -->
 
         <button id="reset" onclick='reload_js()'>Click here to start over!</button>
-        <div id="currentColorLabel">CURRENT BRUSH:</div>
+        <div id="currentColorLabel">CURRENT COLOR:</div>
         <div id="currentColor"></div>
       </div>
-      <div id="pictureDiv"></div>
+      <div id="canvasDiv"></div>
       <div id="brushDiv">
         <button class='brushButton' id='smallBrush'><div /></button>
         <button class='brushButton' id='normalBrush'><div /></button>
@@ -51,7 +51,7 @@
       <div id="timerDiv"></div>
       <div id="scoreDiv">
         <p id="scoreDisplay"></p>
-        <input type="text" placeholder="Type your name here" id="playerName" />
+        <input type="text" placeholder="Type your name here" maxlength="14" id="playerName" />
       </div>
 
     </div>

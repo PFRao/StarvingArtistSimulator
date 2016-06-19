@@ -7,23 +7,12 @@ var clickTool = [];
 var paint;
 var started;
 
-// var colorPurple = "#cb3594";
-// var colorGreen = "#659b41";
-// var colorYellow = "#ffcf33";
-// var colorBrown = "#986928";
-// var colorCyan = "#5cd5d1";
-// var colorBlack = "#000000";
-
 var curColor = "#000000";
 var clickColor = [];
 
 var timer = new Clock();
 
 var curSize = "large";
-
-// var gameMode = "assets";
-// var gameExtension = "jpg";
-// var gameTime = 90;
 
 function addClick(x, y, dragging)
 {
@@ -62,16 +51,9 @@ function redraw(){
     }else{
       context.moveTo(clickX[i], clickY[i]);
     }
+    
     context.lineTo(clickX[i], clickY[i]);
     context.closePath();
-
-    // if(clickTool[i] == "eraser"){
-    //   //context.globalCompositeOperation = "destination-out"; // To erase instead of draw over with white
-    //   context.strokeStyle = 'white';
-    // }else{
-    //   //context.globalCompositeOperation = "source-over";	// To erase instead of draw over with white
-    // }
-
     context.strokeStyle = clickColor[i];
     context.lineJoin = "round";
     context.lineWidth = radius;
@@ -117,90 +99,47 @@ image.onload = function () {
   }
   pictureContext = picture.getContext("2d");
   pictureContext.drawImage(image, 0, 0, 500, 500);
-  $('body').append("<ul id='leaderboard'>Previous Pictures:</ul>");
+  $('body').append("<ul id='leaderboard'></ul>");
   renderLeaderboard();
+  selectBtn("largeBrush");
 
 };
 
-// var pictureDiv = document.getElementById('pictureDiv');
-// picture = document.createElement('img');
-//
-// whichPic = Math.floor(Math.random() * (10 - 1 + 1)) + 1;
-// console.log("Selecting picture #", whichPic);
-// var picString = 'assets/' + whichPic + '.jpg';
-//
-// picture.setAttribute('width', 500);
-// picture.setAttribute('height', 500);
-// picture.setAttribute('src', picString);
-// pictureDiv.appendChild(picture);
-
-// var timerDiv = document.getElementById('timerDiv');
-//
-// var scoreDiv = document.getElementById('scoreDiv');
 $('#scoreDisplay').html("Score: 0");
 
 // BRUSH CONTROLS
 
+function selectBtn(brushId) {
+  var sel = document.getElementsByClassName('brushButton');
+  for (var i=0; i<sel.length; i++) {
+	sel[i].style.border = "";
+  }
+  document.getElementById(brushId).style.border = '2px solid white';
+}
+
 $('#smallBrush').click(function (e) {
   curSize = "small";
-  updateBrush();
+  selectBtn("smallBrush");
 });
 
 $('#normalBrush').click(function (e) {
   curSize = "normal";
-  updateBrush();
+  selectBtn("normalBrush");
 });
 
 $('#largeBrush').click(function (e) {
   curSize = "large";
-  updateBrush();
+  selectBtn("largeBrush");
 });
 
 $('#hugeBrush').click(function (e) {
   curSize = "huge";
-  updateBrush();
+  selectBtn("hugeBrush");
 });
 
 $('#ginormousBrush').click(function (e) {
   curSize = "ginormous";
-  updateBrush();
-});
-
-// COLOR CONTROLS
-
-// $('#purplePaint').click(function (e) {
-//   curColor = colorPurple;
-//   updateBrush();
-// });
-//
-// $('#greenPaint').click(function (e) {
-//   curColor = colorGreen;
-//   updateBrush();
-// });
-//
-// $('#yellowPaint').click(function (e) {
-//   curColor = colorYellow;
-//   updateBrush();
-// });
-//
-// $('#brownPaint').click(function (e) {
-//   curColor = colorBrown;
-//   updateBrush();
-// });
-//
-// $('#cyanPaint').click(function (e) {
-//   curColor = colorCyan;
-//   updateBrush();
-// });
-//
-// $('#blackPaint').click(function (e) {
-//   curColor = colorBlack;
-//   updateBrush();
-// });
-
-$('#eraser').click(function (e) {
-  curColor = "#FFFFFF";
-  updateBrush(true);
+  selectBtn("ginormousBrush");
 });
 
 // PAINTING
@@ -237,8 +176,6 @@ $('#theCanvas').mouseleave(function(e){
 // COLOR PICKING
 
 $('#thePicture').click(function (event) {
-  // var colorPicker = document.getElementById('thePicture');
-
   var x = event.pageX - this.offsetLeft;
   var y = event.pageY - this.offsetTop;
 
@@ -252,6 +189,11 @@ $('#thePicture').click(function (event) {
   updateBrush();
 });
 
+$('#eraser').click(function (e) {
+  curColor = "#FFFFFF";
+  updateBrush(true);
+});
+
 function rgbToHex(r,g,b) {
   return toHex(r)+toHex(g)+toHex(b);
 }
@@ -262,12 +204,10 @@ function toHex(n) {
   n = Math.max(0,Math.min(n,255));return "0123456789ABCDEF".charAt((n-n%16)/16) + "0123456789ABCDEF".charAt(n%16);
 }
 
-
 // TIMER
 
 function Clock () {
-  // 1. Create a bunch of things.
-  this.currentTime = 10;
+  this.currentTime = 3;
 
   this.printTime = function () {
     $('#timerDiv').html(this.currentTime.toString());
@@ -287,11 +227,9 @@ function Clock () {
   this._incrementSeconds = function () {
     this.currentTime -= 1;
   };
-  // 3. Call printTime.
+
   $('#timerDiv').html("Start drawing to begin the game!");
 
-  // 4. Schedule the tick at 1 second intervals.
-  // this.interval = window.
   this.startGame = function () {
     this.printTime();
     this.interval = window.setInterval(this._tick.bind(this), 1000);
@@ -299,28 +237,6 @@ function Clock () {
 }
 
 // COMPARISON
-
-// var compare = function () {
-//
-//   var finished = document.getElementById("theCanvas");
-//
-//   finished.toBlob(function(blob) {
-//     var newImg = document.createElement("img"),
-//     url = URL.createObjectURL(blob);
-//     console.log(url);
-//     var diff = resemble(url).compareTo(picString).onComplete(function(data){
-//       var theScore = (100 - data.rawMisMatchPercentage);
-//       countUp(theScore);
-//     });
-//
-//     newImg.onload = function() {
-//       URL.revokeObjectURL(url);
-//     };
-//
-//     $('#canvasDiv').html("<img src='" + url + "' />");
-//
-//   });
-// };
 
 var compare = function () {
 
@@ -331,8 +247,6 @@ var compare = function () {
     var url, url2;
     var newImg = document.createElement("img");
     url = URL.createObjectURL(blob);
-    // console.log(Url.createObjectURL(blob));
-    // console.log(blob);
     newImg.onload = function() {
       URL.revokeObjectURL(url);
     };
@@ -351,9 +265,7 @@ var compare = function () {
       });
     });
 
-
   });
-
 
 };
 
@@ -364,11 +276,9 @@ var renderLeaderboard = function () {
     return b[1] - a[1];
   });
   leaderboard.forEach(function (element, index) {
-    $('#leaderboard').append(
-      "<li>" + element[0] + "<br />" + element[1] + "<br />",
-      element[2],
-      "</li>"
-    );
+    var newListing = $("<li class='listing'></li>");
+    $(newListing).append(element[0], element[1], element[2]);
+    $('#leaderboard').append(newListing);
   });
 };
 
@@ -379,41 +289,22 @@ var updateLeaderboard = function (name, score, picture) {
 // UTILITY STUFF
 
 var updateBrush = function () {
-  var newSize;
-
-  if (curSize === "small") {
-    newSize = 5;
-  } else if (curSize === "normal") {
-    newSize = 10;
-  } else if (curSize === "large") {
-    newSize = 20;
-  } else if (curSize === "huge") {
-    newSize = 30;
-  } else {
-    newSize = 40;
-  }
-
   $('#currentColor').css('background', curColor);
-  $('#currentColor').css('height', newSize);
-  $('#currentColor').css('width', newSize);
-  $('#currentColor').css('border-radius', newSize/2);
 };
 
 var countUp = function (target) {
 
   var count = 0;
-  var playerName = $('#playerName').val();
+  var playerName = $('#playerName').val() + " - ";
   var theResult = $('#theResult');
-  console.log("Your score is:", target);
+  updateLeaderboard(playerName, Math.ceil(target), theResult);
   var theInterval = window.setInterval(function () {
     $('#scoreDisplay').html("Score: " + count);
     if (count < target) {
       count += 1;
     } else {
       window.clearInterval(theInterval);
-      updateLeaderboard(playerName, count, theResult);
     }
   }, 1);
-
 
 };
