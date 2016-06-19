@@ -14,6 +14,8 @@ var timer = new Clock();
 
 var curSize = "large";
 
+var theIndex = 0;
+
 function addClick(x, y, dragging)
 {
   clickX.push(x);
@@ -24,11 +26,11 @@ function addClick(x, y, dragging)
 }
 
 function redraw(){
-  context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+  // context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 
   var radius;
 
-  for(var i = 0; i < clickX.length; i++)
+  for(var i = theIndex; i < clickX.length; i++)
   {
     if(clickSize[i] == "small"){
       radius = 5;
@@ -51,7 +53,7 @@ function redraw(){
     }else{
       context.moveTo(clickX[i], clickY[i]);
     }
-    
+
     context.lineTo(clickX[i], clickY[i]);
     context.closePath();
     context.strokeStyle = clickColor[i];
@@ -59,6 +61,7 @@ function redraw(){
     context.lineWidth = radius;
     context.stroke();
 
+    theIndex = i;
   }
 }
 
@@ -72,6 +75,8 @@ if(typeof G_vmlCanvasManager != 'undefined') {
   canvas = G_vmlCanvasManager.initElement(canvas);
 }
 context = canvas.getContext("2d");
+context.fillStyle = "white";
+context.fillRect(0, 0, 500, 500);
 
 var paletteDiv = document.getElementById('paletteDiv');
 
@@ -102,6 +107,7 @@ image.onload = function () {
   $('body').append("<ul id='leaderboard'></ul>");
   renderLeaderboard();
   selectBtn("largeBrush");
+  updateBrush();
 
 };
 
@@ -189,6 +195,31 @@ $('#thePicture').click(function (event) {
   updateBrush();
 });
 
+$('#thePicture').mousemove(function (event) {
+  $('#hover').remove();
+  var hover = $("<div id='hover' />");
+
+  var x = event.pageX - this.offsetLeft;
+  var y = event.pageY - this.offsetTop;
+
+  var imgData = pictureContext.getImageData(x, y, 1, 1);
+  var r = imgData.data[0];
+  var g = imgData.data[1];
+  var b = imgData.data[2];
+
+  var newHex = rgbToHex(r, g, b);
+  hoveredColor = "#" + newHex;
+
+  hover.css('left', event.pageX + 5);
+  hover.css('top', event.pageY + 5);
+  hover.css('background', hoveredColor);
+  $('body').append(hover);
+});
+
+$('#thePicture').mouseleave(function (event) {
+  $('#hover').remove();
+});
+
 $('#eraser').click(function (e) {
   curColor = "#FFFFFF";
   updateBrush(true);
@@ -207,7 +238,7 @@ function toHex(n) {
 // TIMER
 
 function Clock () {
-  this.currentTime = 3;
+  this.currentTime = 10;
 
   this.printTime = function () {
     $('#timerDiv').html(this.currentTime.toString());
@@ -242,6 +273,7 @@ var compare = function () {
 
   var finished = document.getElementById("theCanvas");
   var goalPic = document.getElementById("thePicture");
+  var handicap;
 
   finished.toBlob(function(blob) {
     var url, url2;
@@ -259,9 +291,13 @@ var compare = function () {
       };
       $('#canvasDiv').html("<img id='theResult' src='" + url + "' />");
 
+      var biff = resemble(url2).compareTo("../assets/blank.jpg").onComplete(function (data) {
+        handicap = (100 - data.rawMisMatchPercentage);
+      });
+
       var diff = resemble(url).compareTo(url2).onComplete(function(data){
         var theScore = (100 - data.rawMisMatchPercentage);
-        countUp(theScore * 10);
+        countUp((theScore - handicap) * 50);
       });
     });
 
@@ -297,7 +333,9 @@ var countUp = function (target) {
   var count = 0;
   var playerName = $('#playerName').val() + " - ";
   var theResult = $('#theResult');
-  updateLeaderboard(playerName, Math.ceil(target), theResult);
+  if (target > 0) {
+    updateLeaderboard(playerName, Math.ceil(target), theResult);
+  }
   var theInterval = window.setInterval(function () {
     $('#scoreDisplay').html("Score: " + count);
     if (count < target) {
