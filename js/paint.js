@@ -89,6 +89,7 @@ var picString = 'assets2/' + whichPic + '.png';
 var image = new Image();
 image.height = 500;
 image.width = 500;
+image.crossOrigin = "Anonymous"
 image.src = picString;
 
 var picture = document.createElement('canvas');
