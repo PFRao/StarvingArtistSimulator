@@ -1,8 +1,15 @@
 # Starving Artist Simulator
 
-Starving Artist Simulator is a browser-based painting game that aims to simulate a small slice of what goes on in the life of a starving artist. With all pretensions aside, the game is essentially a paint app with an objective: the player will aim to recreate various pictures that are presented to them using only very basic painting tools, and with a very limited amount of time. Since the game canonically takes place within the Pokemon Universe, the pictures that the player will be expected to produce will fall into one of two categories: reproductions of famous paintings, and paintings of people's favorite Pokemon.
+[Play it here!][heroku]
+[heroku]: http://pfrao.github.io/StarvingArtistSimulator
 
-When time runs out, the player's picture will be compared to the "goal" picture using the resemblejs library. Whatever the player has produced by the end is then scored, and the player themselves are then offered the opportunity to try again with a different randomly-selected picture.
+Starving Artist Simulator is a browser-based painting game that aims to simulate a small slice of what goes on in the life of a starving artist. With all pretensions aside, the game is essentially a paint app with an objective: the player will aim to recreate various pictures that are presented to them using only very basic painting tools, and with a very limited amount of time. Since the game canonically takes place within the Pokemon Universe, the pictures that the player will be expected to produce will be paintings of people's favorite Pokemon.
+
+When time runs out, the player's picture will be compared to the "goal" picture using the `resemblejs` library. Whatever the player has produced by the end is then scored, and the player themselves are then offered the opportunity to try again with a different randomly-selected picture.
+
+[Game View][view]
+[view]: ./docs/view.png
+
 
 ## Key features
 
@@ -10,7 +17,10 @@ When time runs out, the player's picture will be compared to the "goal" picture 
 
 This is a library that allows several forms of analysis on image files, including a percentage difference comparison. The library was EXTREMELY helpful, but it did have a fatal flaw; since it compared colors pixel by pixel, any white space in the pictures were always guaranteed to be correct as long as the player avoided coloring in them. In fact, waiting out the timer and not drawing a single line would often result in a picture that was 20 - 40 percent correct. While this wasn't a game-breaking issue by any stretch of the imagination, it did result in an unsatisfying scoring system. So how would we get around it?
 
-Forcing the player to color in the backgrounds was too tedious. Trying to subtract the white space's value from the final score ended up penalizing the player twice if they accidentally colored in a spot that was supposed to be white. The best solution was to simply turn the background of the "goal" pictures transparent. The player would still be required to draw in any sections of the picture that were white, but the background portion would always be equally deducted, whether the player had colored them or not. They were simply an out-of-bounds area as far as the game was concerned. This still left the issue of the white spaces that existed within the picture itself. This was handled by ensuring that the final picture was at least 5% different from a blank canvas before a score would be issued. Failure to meet that condition within the time limit would result in a score of 0.
+* Forcing the player to color in the backgrounds was too tedious.
+* Trying to subtract the white space's value from the final score ended up penalizing the player twice if they accidentally colored in a spot that was supposed to be white.
+
+The best solution was to simply turn the background of the "goal" pictures transparent. The player would still be required to draw in any sections of the picture that were white, but the background portion would always be equally deducted, whether the player had colored them or not. They were simply an out-of-bounds area as far as the game was concerned. This still left the issue of the white spaces that existed within the picture itself. This was handled by ensuring that the final picture was at least 5% different from a blank canvas before a score would be issued. Failure to meet that condition within the time limit would result in a score of 0.
 
 ### Color Picker
 
@@ -19,6 +29,9 @@ The game has the capability to assess pictures both with or without color taken 
 ### Gallery
 
 This is very straightforward. This is an area of the bottom of the game space that shows all pictures created during the current session, as well as their scores, and the name of the player that created them. This list is sorted by score in descending order.
+
+[Gallery][gallery]
+[gallery]: ./docs/gallery.png
 
 ## Conclusion
 
