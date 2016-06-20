@@ -292,13 +292,17 @@ var compare = function () {
       };
       $('#canvasDiv').html("<img id='theResult' src='" + url + "' />");
 
-      var biff = resemble(url2).compareTo("../assets/blank.jpg").onComplete(function (data) {
+      var biff = resemble(url).compareTo("../assets/blank.jpg").onComplete(function (data) {
         handicap = (100 - data.rawMisMatchPercentage);
       });
 
       var diff = resemble(url).compareTo(url2).onComplete(function(data){
         var theScore = (100 - data.rawMisMatchPercentage);
-        countUp((theScore - handicap) * 50);
+        if (handicap < 5) {
+          countUp(0);
+        } else {
+          countUp((theScore) * 50);
+        }
       });
     });
 
