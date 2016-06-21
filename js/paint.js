@@ -82,14 +82,14 @@ var paletteDiv = document.getElementById('paletteDiv');
 
 var pictureDiv = document.getElementById('pictureDiv');
 
-whichPic = Math.floor(Math.random() * (20 - 1 + 1)) + 1;
+whichPic = Math.floor(Math.random() * (23 - 1 + 1)) + 1;
 console.log("Selecting picture #", whichPic);
 var picString = 'assets2/' + whichPic + '.png';
 
 var image = new Image();
 image.height = 500;
 image.width = 500;
-image.crossOrigin = "Anonymous"
+image.crossOrigin = "Anonymous";
 image.src = picString;
 
 var picture = document.createElement('canvas');
@@ -239,7 +239,7 @@ function toHex(n) {
 // TIMER
 
 function Clock () {
-  this.currentTime = 10;
+  this.currentTime = 60;
 
   this.printTime = function () {
     $('#timerDiv').html(this.currentTime.toString());
