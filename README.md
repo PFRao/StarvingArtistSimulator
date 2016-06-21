@@ -10,7 +10,6 @@ When time runs out, the player's picture will be compared to the "goal" picture 
 [Game View][view]
 [view]: ./docs/view.png
 
-
 ## Key features
 
 ### resemblejs
@@ -25,6 +24,35 @@ The best solution was to simply turn the background of the "goal" pictures trans
 ### Color Picker
 
 The game has the capability to assess pictures both with or without color taken into account, but including color was preferable because otherwise, the players could just color in as much of the canvas as possible to achieve the highest score. And since color matching was of such utmost importance, it was decided that providing a traditional paint palette would be insufficient. Instead, the player could pick colors directly off of the goal picture. Because the act of picking out colors precisely off of a color picture can often be difficult, a small `div` was added that, when the player moved the mouse over the goal photo, would follow the player's mouse around and show what color was currently being hovered over. This indicator would disappear as soon as the player's mouse left the picture.
+
+The color preview box was achieved by repeatedly removing and re-rendering a `div` at coordinates that were slightly offset from the tip of the cursor.
+
+``` javascript
+  $('#thePicture').mousemove(function (event) {
+    $('#hover').remove();
+    var hover = $("<div id='hover' />");
+
+    var x = event.pageX - this.offsetLeft;
+    var y = event.pageY - this.offsetTop;
+
+    var imgData = pictureContext.getImageData(x, y, 1, 1);
+    var r = imgData.data[0];
+    var g = imgData.data[1];
+    var b = imgData.data[2];
+
+    var newHex = rgbToHex(r, g, b);
+    hoveredColor = "#" + newHex;
+
+    hover.css('left', event.pageX + 5);
+    hover.css('top', event.pageY + 5);
+    hover.css('background', hoveredColor);
+    $('body').append(hover);
+  });
+
+  $('#thePicture').mouseleave(function (event) {
+    $('#hover').remove();
+  });
+```
 
 ### Gallery
 
