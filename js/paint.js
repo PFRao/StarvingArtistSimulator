@@ -82,7 +82,7 @@ var paletteDiv = document.getElementById('paletteDiv');
 
 var pictureDiv = document.getElementById('pictureDiv');
 
-whichPic = Math.floor(Math.random() * (23 - 1 + 1)) + 1;
+whichPic = Math.floor(Math.random() * (52 - 1 + 1)) + 1;
 console.log("Selecting picture #", whichPic);
 var picString = 'assets2/' + whichPic + '.png';
 
