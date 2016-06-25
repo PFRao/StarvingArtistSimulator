@@ -54,6 +54,8 @@ The color preview box was achieved by repeatedly removing and re-rendering a `di
   });
 ```
 
+NB: the `$l` function is Rambutan's default query selector, similar to `$` in jQuery. See https://github.com/PFRao/Rambutan for more details.
+
 ### Gallery
 
 This is very straightforward. This is an area of the bottom of the game space that shows all pictures created during the current session, as well as their scores, and the name of the player that created them. This list is sorted by score in descending order.
