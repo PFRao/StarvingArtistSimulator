@@ -105,14 +105,17 @@ image.onload = function () {
   }
   pictureContext = picture.getContext("2d");
   pictureContext.drawImage(image, 0, 0, 500, 500);
-  $('body').append("<ul id='leaderboard'></ul>");
+
+  var child = $l.createWithId("ul", "leaderboard");
+  document.body.appendChild(child);
+
   renderLeaderboard();
   selectBtn("largeBrush");
   updateBrush();
 
 };
 
-$('#scoreDisplay').html("Score: 0");
+$l('#scoreDisplay').html("Score: 0");
 
 // BRUSH CONTROLS
 
@@ -124,34 +127,34 @@ function selectBtn(brushId) {
   document.getElementById(brushId).style.border = '2px solid white';
 }
 
-$('#smallBrush').click(function (e) {
+$l('#smallBrush').on('click', function (e) {
   curSize = "small";
   selectBtn("smallBrush");
 });
 
-$('#normalBrush').click(function (e) {
+$l('#normalBrush').on('click', function (e) {
   curSize = "normal";
   selectBtn("normalBrush");
 });
 
-$('#largeBrush').click(function (e) {
+$l('#largeBrush').on('click', function (e) {
   curSize = "large";
   selectBtn("largeBrush");
 });
 
-$('#hugeBrush').click(function (e) {
+$l('#hugeBrush').on('click', function (e) {
   curSize = "huge";
   selectBtn("hugeBrush");
 });
 
-$('#ginormousBrush').click(function (e) {
+$l('#ginormousBrush').on('click', function (e) {
   curSize = "ginormous";
   selectBtn("ginormousBrush");
 });
 
 // PAINTING
 
-$('#theCanvas').mousedown(function(e){
+$l('#theCanvas').on('mousedown', function(e){
   var mouseX = e.pageX - this.offsetLeft;
   var mouseY = e.pageY - this.offsetTop;
 
@@ -165,24 +168,24 @@ $('#theCanvas').mousedown(function(e){
   redraw();
 });
 
-$('#theCanvas').mousemove(function(e){
+$l('#theCanvas').on('mousemove', function(e){
   if(paint){
     addClick(e.pageX - this.offsetLeft, e.pageY - this.offsetTop, true);
     redraw();
   }
 });
 
-$('#theCanvas').mouseup(function(e){
+$l('#theCanvas').on('mouseup', function(e){
   paint = false;
 });
 
-$('#theCanvas').mouseleave(function(e){
+$l('#theCanvas').on('mouseleave', function(e){
   paint = false;
 });
 
 // COLOR PICKING
 
-$('#thePicture').click(function (event) {
+$l('#thePicture').on('click', function (event) {
   var x = event.pageX - this.offsetLeft;
   var y = event.pageY - this.offsetTop;
 
@@ -196,9 +199,11 @@ $('#thePicture').click(function (event) {
   updateBrush();
 });
 
-$('#thePicture').mousemove(function (event) {
-  $('#hover').remove();
-  var hover = $("<div id='hover' />");
+$l('#thePicture').on('mousemove', function (event) {
+  if (document.getElementById('hover')) {
+    document.getElementById('hover').remove();
+  }
+  var hover = $l.createWithId("div", "hover");
 
   var x = event.pageX - this.offsetLeft;
   var y = event.pageY - this.offsetTop;
@@ -211,17 +216,18 @@ $('#thePicture').mousemove(function (event) {
   var newHex = rgbToHex(r, g, b);
   hoveredColor = "#" + newHex;
 
-  hover.css('left', event.pageX + 5);
-  hover.css('top', event.pageY + 5);
-  hover.css('background', hoveredColor);
-  $('body').append(hover);
+  hover.style.left = event.pageX + 5 + "px";
+  hover.style.top = event.pageY + 5 + "px";
+
+  hover.style.background = hoveredColor;
+  document.body.appendChild(hover);
 });
 
-$('#thePicture').mouseleave(function (event) {
-  $('#hover').remove();
+$l('#thePicture').on('mouseleave', function (event) {
+  document.getElementById('hover').remove();
 });
 
-$('#eraser').click(function (e) {
+$l('#eraser').on('click', function (e) {
   curColor = "#FFFFFF";
   updateBrush(true);
 });
@@ -239,10 +245,10 @@ function toHex(n) {
 // TIMER
 
 function Clock () {
-  this.currentTime = 60;
+  this.currentTime = 3;
 
   this.printTime = function () {
-    $('#timerDiv').html(this.currentTime.toString());
+    $l('#timerDiv').html(this.currentTime.toString());
   };
 
   this._tick = function () {
@@ -250,7 +256,7 @@ function Clock () {
       this._incrementSeconds();
       this.printTime();
     } else {
-      $('#timerDiv').html("Time's up!");
+      $l('#timerDiv').html("Time's up!");
       window.clearInterval(this.interval);
       compare();
     }
@@ -260,7 +266,7 @@ function Clock () {
     this.currentTime -= 1;
   };
 
-  $('#timerDiv').html("Start drawing to begin the game!");
+  $l('#timerDiv').html("Start drawing to begin the game!");
 
   this.startGame = function () {
     this.printTime();
@@ -290,7 +296,7 @@ var compare = function () {
       newImg.onload = function() {
         URL.revokeObjectURL(url2);
       };
-      $('#canvasDiv').html("<img id='theResult' src='" + url + "' />");
+      $l('#canvasDiv').html("<img id='theResult' src='" + url + "' />");
 
       var biff = resemble(url).compareTo("../assets/blank.jpg").onComplete(function (data) {
         handicap = (100 - data.rawMisMatchPercentage);
@@ -317,9 +323,10 @@ var renderLeaderboard = function () {
     return b[1] - a[1];
   });
   leaderboard.forEach(function (element, index) {
-    var newListing = $("<li class='listing'></li>");
-    $(newListing).append(element[0], element[1], element[2]);
-    $('#leaderboard').append(newListing);
+    var newListing = $l.create("li", "listing");
+
+    $l(newListing).append(element[0], element[1], element[2]);
+    $l('#leaderboard').append(newListing);
   });
 };
 
@@ -330,19 +337,29 @@ var updateLeaderboard = function (name, score, picture) {
 // UTILITY STUFF
 
 var updateBrush = function () {
-  $('#currentColor').css('background', curColor);
+  document.getElementById('currentColor').style.background = curColor;
 };
 
 var countUp = function (target) {
 
   var count = 0;
-  var playerName = $('#playerName').val() + " - ";
-  var theResult = $('#theResult');
+
+  var playerName;
+  if($l('#playerName').val().length > 0) {
+    playerName = $l('#playerName').val() + " - ";
+  } else {
+    playerName = "anonymous - ";
+  }
+
+  var theResult = document.getElementById('theResult');
+  var theMasterpiece = theResult.cloneNode(false);
+  theMasterpiece.removeAttribute('id');
+
   if (target > 0) {
-    updateLeaderboard(playerName, Math.ceil(target), theResult);
+    updateLeaderboard(playerName, Math.ceil(target), theMasterpiece);
   }
   var theInterval = window.setInterval(function () {
-    $('#scoreDisplay').html("Score: " + count);
+    $l('#scoreDisplay').html("Score: " + count);
     if (count < target) {
       count += 1;
     } else {
