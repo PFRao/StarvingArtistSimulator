@@ -28,8 +28,8 @@ The game has the capability to assess pictures both with or without color taken 
 The color preview box was achieved by repeatedly removing and re-rendering a `div` at coordinates that were slightly offset from the tip of the cursor.
 
 ``` javascript
-  $('#thePicture').mousemove(function (event) {
-    $('#hover').remove();
+  $l('#thePicture').on('mousemove', function (event) {
+    $l('#hover').remove();
     var hover = $("<div id='hover' />");
 
     var x = event.pageX - this.offsetLeft;
@@ -46,11 +46,11 @@ The color preview box was achieved by repeatedly removing and re-rendering a `di
     hover.css('left', event.pageX + 5);
     hover.css('top', event.pageY + 5);
     hover.css('background', hoveredColor);
-    $('body').append(hover);
+    $l('body').append(hover);
   });
 
-  $('#thePicture').mouseleave(function (event) {
-    $('#hover').remove();
+  $l('#thePicture').on('mouseleave', function (event) {
+    $l('#hover').remove();
   });
 ```
 
