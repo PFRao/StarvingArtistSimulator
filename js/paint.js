@@ -245,7 +245,7 @@ function toHex(n) {
 // TIMER
 
 function Clock () {
-  this.currentTime = 3;
+  this.currentTime = 60;
 
   this.printTime = function () {
     $l('#timerDiv').html(this.currentTime.toString());
