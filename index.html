@@ -32,6 +32,7 @@
       <div id="paletteDiv">
 
         <button id="reset" onclick='reload_js()'>Click here to start over!</button>
+        <button id="mute" onclick='mute()'>Mute</button>
         <div id="currentColorLabel">CURRENT COLOR:</div>
         <div id="currentColor"></div>
       </div>
@@ -51,7 +52,7 @@
 
     </div>
 
-    <audio src="assets/bells.mp3" autoplay="true" loop="true" volume="0.8" />
+    <audio id="muzak" src="assets/bells.mp3" autoplay="true" loop="true" volume="0.8"></audio>
 
     <script type="text/javascript">
 
@@ -66,6 +67,8 @@
     </script>
     <script src="./js/paint.js" type="text/javascript"></script>
     <script>
+      var muted = false;
+
       function reload_js() {
         $('#theCanvas').remove();
         $('#thePicture').remove();
@@ -81,6 +84,17 @@
 
         $('script[src="./js/paint.js"]').remove();
         $('<script>').attr('src', "./js/paint.js").appendTo('head');
+      }
+
+      function mute() {
+        if (muted) {
+          document.getElementById("muzak").muted = false;
+          muted = false;
+        } else {
+          document.getElementById("muzak").muted = true;
+          muted = true;
+        }
+        console.log(muted);
       }
     </script>
 
